@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-info">
+                <h1>Repository Dashboard</h1>
+                <p id="repo-description">Kronos is a GitHub repository tracking system</p>
+            </div>
+            <a href="https://github.com/shiyu-coder/Kronos" target="_blank" class="repo-link">shiyu-coder/Kronos</a>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn-refresh" onclick="fetchData()">🔄 Refresh Data</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid" style="display: none;">
+            <div class="stat-card">
+                <h3>Total Issues</h3>
+                <div class="value" id="total-issues">0</div>
+                <div class="description">Issues in repository</div>
+            </div>
+            <div class="stat-card">
+                <h3>Open Issues</h3>
+                <div class="value" id="open-issues">0</div>
+                <div class="description">Currently open</div>
+            </div>
+            <div class="stat-card">
+                <h3>Full Requests</h3>
+                <div class="value" id="total-prs">0</div>
+                <div class="description">Pull requests</div>
+            </div>
+            <div class="stat-card">
+                <h3>Repository Activity</h3>
+                <div class="value" id="activity-count">0</div>
+                <div class="description">Recent updates</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid" id="charts-grid" style="display: none;">
+            <div class="chart-card">
+                <h3>Repository Activity</h3>
+                <p>Recent issues and pull requests</p>
+                <div class="chart-container">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Issues vs Pull Requests</h3>
+                <p>Repository work breakdown</p>
+                <div class="chart-container">
+                    <canvas id="breakdownChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-card" id="table-card" style="display: none;">
+            <h3>Recent Issues & Pull Requests</h3>
+            <p>Latest items from repository</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Labels</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-message" style="display: none;"></div>
+
+        <!-- Loading Message -->
+        <div id="loading-message" style="display: none;">
+            <div class="loading-text">Loading data from GitHub...</div>
+        </div>
+    </div>
+
+    <script src="scrript.js"></script>
+    </body>
+</html>
