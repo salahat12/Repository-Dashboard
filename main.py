@@ -24,5 +24,5 @@ async def get_github_issues():
 async def dashboard(request: Request):
 	return templates.TemplateResponse(
 		request=request,
-		name="dashboard.html"
+		name="index.html"
 	)
