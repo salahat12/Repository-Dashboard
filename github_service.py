@@ -30,7 +30,7 @@ async def fetch_repo_info() -> RepoInfo:
 
 async def _search_count(client: httpx.AsyncClient, item_type: str, state: str) -> int:
     url = f"{GITHUB_API_URL}/search/issues"
-    query = f"repo:{REPO_OWNER}/{REPO_NAME} type:{item_type} state:{state}"
+    query = f"repo:{REPO_OWNER}/{REPO_NAME} is:{item_type} is:{state}"
 
     response = await client.get(
         url,
@@ -39,6 +39,9 @@ async def _search_count(client: httpx.AsyncClient, item_type: str, state: str) -
     )
 
     result = response.json()
+
+    if "total_count" not in result:
+        raise RuntimeError(f"GitHub search failed: {result}")
 
     return result["total_count"]
 

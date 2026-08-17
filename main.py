@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from github_service import fetch_issues_summary, fetch_repo_info
@@ -6,7 +7,9 @@ from models import IssuesSummary, RepoInfo
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+templates = Jinja2Templates(directory="frontend")
 
 
 @app.get("/github", response_model=RepoInfo)
