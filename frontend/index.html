@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repository Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -20,7 +20,7 @@
 
         <!-- Controls -->
         <div class="controls">
-            <button class="btn-refresh" onclick="fetchData()">🔄 Refresh Data</button>
+            <button class="btn-refresh" onclick="fetchData()">Refresh Data</button>
         </div>
 
         <!-- Stats -->
@@ -36,7 +36,7 @@
                 <div class="description">Currently open</div>
             </div>
             <div class="stat-card">
-                <h3>Full Requests</h3>
+                <h3>Pull Requests</h3>
                 <div class="value" id="total-prs">0</div>
                 <div class="description">Pull requests</div>
             </div>
@@ -93,6 +93,6 @@
         </div>
     </div>
 
-    <script src="scrript.js"></script>
-    </body>
+    <script src="{{ url_for('static', path='scrript.js') }}"></script>
+</body>
 </html>
