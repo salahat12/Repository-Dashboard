@@ -5,9 +5,14 @@ from models import IssueItem, IssuesSummary, RepoInfo
 
 
 def _headers():
-    return {
-        "Authorization": f"Bearer {GITHUB_TOKEN}"
+    headers = {
+        "Accept": "application/vnd.github+json",
     }
+
+    if GITHUB_TOKEN:
+        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+
+    return headers
 
 
 async def fetch_repo_info() -> RepoInfo:
@@ -15,6 +20,7 @@ async def fetch_repo_info() -> RepoInfo:
 
     async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=_headers())
+        response.raise_for_status()
 
     repo = response.json()
 
@@ -37,6 +43,7 @@ async def _search_count(client: httpx.AsyncClient, item_type: str, state: str) -
         headers=_headers(),
         params={"q": query, "per_page": 1},
     )
+    response.raise_for_status()
 
     result = response.json()
 
@@ -57,6 +64,7 @@ async def _fetch_recent_items(client: httpx.AsyncClient) -> list[tuple[str, Issu
     }
 
     response = await client.get(url, headers=_headers(), params=params)
+    response.raise_for_status()
     data = response.json()
 
     items = []
