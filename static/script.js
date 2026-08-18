@@ -15,32 +15,45 @@ async function fetchData() {
     tableCard.style.display = 'none';
 
     try {
-        const response = await fetch('/github/issues');
+        const [issuesResponse, prsResponse] = await Promise.all([
+            fetch('/github/issues'),
+            fetch('/github/pull-requests'),
+        ]);
 
-        if (!response.ok) {
-            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+        if (!issuesResponse.ok) {
+            throw new Error(`Issues request returned ${issuesResponse.status}: ${issuesResponse.statusText}`);
         }
 
-        const data = await response.json();
+        if (!prsResponse.ok) {
+            throw new Error(`Pull requests request returned ${prsResponse.status}: ${prsResponse.statusText}`);
+        }
+
+        const [issuesData, prsData] = await Promise.all([
+            issuesResponse.json(),
+            prsResponse.json(),
+        ]);
 
         loadingMsg.style.display = 'none';
 
         // Update Stats
-        document.getElementById('total-issues').textContent = data.total_issues;
-        document.getElementById('open-issues').textContent = data.open_issues;
-        document.getElementById('total-prs').textContent = data.total_pull_requests;
-        document.getElementById('activity-count').textContent = (data.total_issues + data.total_pull_requests);
+        document.getElementById('total-issues').textContent = issuesData.total_issues;
+        document.getElementById('open-issues').textContent = issuesData.open_issues;
+        document.getElementById('total-prs').textContent = prsData.total_pull_requests;
+        document.getElementById('activity-count').textContent = (issuesData.total_issues + prsData.total_pull_requests);
 
         statsGrid.style.display = 'grid';
         chartsGrid.style.display = 'grid';
         tableCard.style.display = 'block';
 
         // Update Charts
-        updateActivityChart(data.issues, data.pull_requests);
-        updateBreakdownChart(data.total_issues, data.total_pull_requests);
+        const combinedItems = [...issuesData.issues, ...prsData.pull_requests]
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        updateActivityChart(combinedItems);
+        updateBreakdownChart(issuesData.total_issues, prsData.total_pull_requests);
 
         // Update Table
-        updateTable([...data.issues, ...data.pull_requests].slice(0, 10));
+        updateTable(combinedItems.slice(0, 10));
 
     } catch (error) {
         loadingMsg.style.display = 'none';
@@ -80,13 +93,12 @@ function buildMonthlyCounts(items, monthsBack = 11) {
     };
 }
 
-function updateActivityChart(issues, pullRequests) {
+function updateActivityChart(issues) {
     const ctx = document.getElementById('activityChart').getContext('2d');
 
     if (activityChart) activityChart.destroy();
 
-    const combined = [...issues, ...pullRequests];
-    const { labels, counts } = buildMonthlyCounts(combined);
+    const { labels, counts } = buildMonthlyCounts(issues);
 
     activityChart = new Chart(ctx, {
         type: 'bar',
@@ -152,7 +164,7 @@ function updateBreakdownChart(issues, prs) {
 
 function updateTable(items) {
     const tbody = document.getElementById('table-body');
-    tbody.innerHTML = items.map(item => `
+    tbody.innerHTML = items.length ? items.map(item => `
         <tr>
             <td>#${item.number}</td>
             <td>${item.title.substring(0, 50)}...</td>
@@ -160,7 +172,11 @@ function updateTable(items) {
             <td>${item.labels.join(', ') || 'none'}</td>
             <td><span class="status-badge status-${item.state}">${item.state}</span></td>
         </tr>
-    `).join('');
+    `).join('') : `
+        <tr>
+            <td colspan="5">No issues or pull requests found.</td>
+        </tr>
+    `;
 }
 
-fetchData();
+void fetchData();

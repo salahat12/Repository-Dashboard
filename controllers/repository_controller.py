@@ -3,14 +3,14 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from models import IssuesSummary, RepoInfo
-from services.github_service import fetch_issues_summary, fetch_repo_info
+from models import Issues, PR, Repository
+from services.github_request import fetch_issues, fetch_pull_requests, fetch_repo_info
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/github", response_model=RepoInfo)
+@router.get("/github", response_model=Repository)
 async def get_github_repo():
     try:
         return await fetch_repo_info()
@@ -18,10 +18,18 @@ async def get_github_repo():
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
-@router.get("/github/issues", response_model=IssuesSummary)
+@router.get("/github/issues", response_model=Issues)
 async def get_github_issues():
     try:
-        return await fetch_issues_summary()
+        return await fetch_issues()
+    except (httpx.HTTPStatusError, httpx.RequestError) as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@router.get("/github/pull-requests", response_model=PR)
+async def get_github_pull_requests():
+    try:
+        return await fetch_pull_requests()
     except (httpx.HTTPStatusError, httpx.RequestError) as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
