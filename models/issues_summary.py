@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -12,5 +12,8 @@ class IssuesSummary(BaseModel):
     total_pull_requests: int
     open_pull_requests: int
     closed_pull_requests: int
+    recent_activity_count: int
+    recent_comments_count: int
+    latest_activity_at: Optional[str]
     issues: List[IssueItem]
     pull_requests: List[IssueItem]

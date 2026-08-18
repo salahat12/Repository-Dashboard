@@ -29,7 +29,9 @@ async function fetchData() {
         document.getElementById('total-issues').textContent = data.total_issues;
         document.getElementById('open-issues').textContent = data.open_issues;
         document.getElementById('total-prs').textContent = data.total_pull_requests;
-        document.getElementById('activity-count').textContent = (data.total_issues + data.total_pull_requests);
+        document.getElementById('activity-count').textContent = data.recent_activity_count;
+        document.getElementById('activity-description').textContent =
+            `${data.recent_comments_count} comments on recent activity`;
 
         statsGrid.style.display = 'grid';
         chartsGrid.style.display = 'grid';

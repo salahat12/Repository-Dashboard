@@ -95,6 +95,10 @@ async def fetch_issues_summary() -> IssuesSummary:
 
     issues = [item for item in recent_items if item.type == "issue"]
     pull_requests = [item for item in recent_items if item.type == "pull_request"]
+    latest_activity_at = max(
+        (item.updated_at for item in recent_items),
+        default=None,
+    )
 
     return IssuesSummary(
         total_issues=open_issues_count + closed_issues_count,
@@ -103,6 +107,9 @@ async def fetch_issues_summary() -> IssuesSummary:
         total_pull_requests=open_pull_requests_count + closed_pull_requests_count,
         open_pull_requests=open_pull_requests_count,
         closed_pull_requests=closed_pull_requests_count,
+        recent_activity_count=len(recent_items),
+        recent_comments_count=sum(item.comments for item in recent_items),
+        latest_activity_at=latest_activity_at,
         issues=issues,
         pull_requests=pull_requests,
     )
