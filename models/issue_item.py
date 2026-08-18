@@ -8,6 +8,7 @@ class IssueItem(BaseModel):
 	title: str
 	author: str
 	state: str
+	type: str  # "issue" or "pull_request"
 	comments: int
 	labels: List[str]
 	created_at: str

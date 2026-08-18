@@ -5,9 +5,11 @@ from models import IssueItem, IssuesSummary, RepoInfo
 
 
 def _headers():
-    return {
-        "Authorization": f"Bearer {GITHUB_TOKEN}"
-    }
+    if GITHUB_TOKEN:
+        return {
+            "Authorization": f"Bearer {GITHUB_TOKEN}"
+        }
+    return {}
 
 
 async def fetch_repo_info() -> RepoInfo:
@@ -46,7 +48,7 @@ async def _search_count(client: httpx.AsyncClient, item_type: str, state: str) -
     return result["total_count"]
 
 
-async def _fetch_recent_items(client: httpx.AsyncClient) -> list[tuple[str, IssueItem]]:
+async def _fetch_recent_items(client: httpx.AsyncClient) -> list[IssueItem]:
     url = f"{GITHUB_API_URL}/repos/{REPO_OWNER}/{REPO_NAME}/issues"
 
     params = {
@@ -62,11 +64,14 @@ async def _fetch_recent_items(client: httpx.AsyncClient) -> list[tuple[str, Issu
     items = []
 
     for item in data:
+        item_type = "pull_request" if "pull_request" in item else "issue"
+
         cleaned_item = IssueItem(
             number=item["number"],
             title=item["title"],
             author=item["user"]["login"],
             state=item["state"],
+            type=item_type,
             comments=item["comments"],
             labels=[label["name"] for label in item["labels"]],
             created_at=item["created_at"],
@@ -74,8 +79,7 @@ async def _fetch_recent_items(client: httpx.AsyncClient) -> list[tuple[str, Issu
             closed_at=item["closed_at"],
         )
 
-        item_type = "pull_request" if "pull_request" in item else "issue"
-        items.append((item_type, cleaned_item))
+        items.append(cleaned_item)
 
     return items
 
@@ -89,8 +93,8 @@ async def fetch_issues_summary() -> IssuesSummary:
 
         recent_items = await _fetch_recent_items(client)
 
-    issues = [item for item_type, item in recent_items if item_type == "issue"]
-    pull_requests = [item for item_type, item in recent_items if item_type == "pull_request"]
+    issues = [item for item in recent_items if item.type == "issue"]
+    pull_requests = [item for item in recent_items if item.type == "pull_request"]
 
     return IssuesSummary(
         total_issues=open_issues_count + closed_issues_count,
