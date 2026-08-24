@@ -1,0 +1,65 @@
+-- 1. REPOSITORY
+CREATE TABLE repository (
+    repo_id SERIAL PRIMARY KEY,
+    github_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    owner VARCHAR(255) NOT NULL,
+    description TEXT,
+    url VARCHAR(500)
+);
+
+-- 2. CONTRIBUTOR
+CREATE TABLE contributor (
+    contributor_id SERIAL PRIMARY KEY,
+    repo_id INTEGER NOT NULL,
+    github_id BIGINT NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    permission VARCHAR(100),
+
+    CONSTRAINT fk_contributor_repository
+        FOREIGN KEY (repo_id)
+        REFERENCES repository(repo_id)
+        ON DELETE CASCADE
+);
+
+-- 3. BRANCH
+CREATE TABLE branch (
+    branch_id SERIAL PRIMARY KEY,
+    repo_id INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    is_default BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_branch_repository
+        FOREIGN KEY (repo_id)
+        REFERENCES repository(repo_id)
+        ON DELETE CASCADE
+);
+
+-- 4. PULL REQUEST
+CREATE TABLE pull_request (
+    pr_id SERIAL PRIMARY KEY,
+    branch_id INTEGER NOT NULL,
+    number INTEGER NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    author VARCHAR(255),
+
+    CONSTRAINT fk_pull_request_branch
+        FOREIGN KEY (branch_id)
+        REFERENCES branch(branch_id)
+        ON DELETE CASCADE
+);
+
+-- 5. COMMIT
+CREATE TABLE commits (
+    commit_id SERIAL PRIMARY KEY,
+    pr_id INTEGER NOT NULL,
+    sha VARCHAR(255) NOT NULL,
+    message TEXT,
+    author VARCHAR(255),
+
+    CONSTRAINT fk_commit_pull_request
+        FOREIGN KEY (pr_id)
+        REFERENCES pull_request(pr_id)
+        ON DELETE CASCADE
+);
