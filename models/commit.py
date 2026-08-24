@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class Commit(BaseModel):
     commit_id: int
-    branch_id: int
+    pr_id: int
     sha: str
     message: str
     author: str
