@@ -1,6 +1,39 @@
 let activityChart = null;
 let breakdownChart = null;
 
+function formatDate(value) {
+    if (!value) {
+        return '-';
+    }
+
+    return new Date(value).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
+}
+
+function formatDateTime(value) {
+    if (!value) {
+        return '-';
+    }
+
+    return new Date(value).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
 async function fetchData() {
     const loadingMsg = document.getElementById('loading-message');
     const errorMsg = document.getElementById('error-message');
@@ -15,45 +48,59 @@ async function fetchData() {
     tableCard.style.display = 'none';
 
     try {
-        const [issuesResponse, prsResponse] = await Promise.all([
-            fetch('/github/issues'),
+        const [repoResponse, prsResponse] = await Promise.all([
+            fetch('/github'),
             fetch('/github/pull-requests'),
         ]);
 
-        if (!issuesResponse.ok) {
-            throw new Error(`Issues request returned ${issuesResponse.status}: ${issuesResponse.statusText}`);
+        if (!repoResponse.ok) {
+            throw new Error(`Repository request returned ${repoResponse.status}: ${repoResponse.statusText}`);
         }
 
         if (!prsResponse.ok) {
             throw new Error(`Pull requests request returned ${prsResponse.status}: ${prsResponse.statusText}`);
         }
 
-        const [issuesData, prsData] = await Promise.all([
-            issuesResponse.json(),
+        const [repoData, pullRequests] = await Promise.all([
+            repoResponse.json(),
             prsResponse.json(),
         ]);
 
         loadingMsg.style.display = 'none';
 
-        // Update Stats
-        document.getElementById('total-issues').textContent = issuesData.total_issues;
-        document.getElementById('open-issues').textContent = issuesData.open_issues;
-        document.getElementById('total-prs').textContent = prsData.total_pull_requests;
-        document.getElementById('activity-count').textContent = (issuesData.total_issues + prsData.total_pull_requests);
+        document.title = `${repoData.owner}/${repoData.name} - Repository Dashboard`;
+        document.getElementById('repo-title').textContent = `${repoData.owner}/${repoData.name}`;
+        document.getElementById('repo-description').textContent = repoData.description || 'No description provided.';
+        document.getElementById('repo-meta').textContent =
+            `Created ${formatDate(repoData.created_at)} • Updated ${formatDate(repoData.updated_at)}`;
+        const repoLink = document.getElementById('repo-link');
+        repoLink.textContent = 'Open repository';
+        repoLink.href = repoData.url;
+
+        const openPullRequests = pullRequests.filter(item => item.state === 'open').length;
+        const closedPullRequests = pullRequests.filter(item => item.state === 'closed').length;
+        const latestUpdate = pullRequests.length
+            ? pullRequests.reduce((latest, item) =>
+                new Date(item.updated_at) > new Date(latest.updated_at) ? item : latest
+            ).updated_at
+            : repoData.updated_at;
+
+        document.getElementById('total-prs').textContent = pullRequests.length;
+        document.getElementById('open-prs').textContent = openPullRequests;
+        document.getElementById('closed-prs').textContent = closedPullRequests;
+        document.getElementById('latest-update').textContent = formatDateTime(latestUpdate);
 
         statsGrid.style.display = 'grid';
         chartsGrid.style.display = 'grid';
         tableCard.style.display = 'block';
 
-        // Update Charts
-        const combinedItems = [...issuesData.issues, ...prsData.pull_requests]
+        const sortedPullRequests = [...pullRequests]
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        updateActivityChart(combinedItems);
-        updateBreakdownChart(issuesData.total_issues, prsData.total_pull_requests);
+        updateActivityChart(sortedPullRequests);
+        updateBreakdownChart(openPullRequests, closedPullRequests);
 
-        // Update Table
-        updateTable(combinedItems.slice(0, 10));
+        updateTable(sortedPullRequests.slice(0, 10));
 
     } catch (error) {
         loadingMsg.style.display = 'none';
@@ -105,7 +152,7 @@ function updateActivityChart(issues) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Activity',
+                label: 'Pull Requests',
                 data: counts,
                 backgroundColor: '#667eea',
                 borderRadius: 4,
@@ -141,7 +188,7 @@ function updateBreakdownChart(issues, prs) {
     breakdownChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Issues', 'Pull Requests'],
+            labels: ['Open Pull Requests', 'Closed Pull Requests'],
             datasets: [{
                 data: [issues, prs],
                 backgroundColor: ['#667eea', '#60a5c9'],
@@ -167,14 +214,14 @@ function updateTable(items) {
     tbody.innerHTML = items.length ? items.map(item => `
         <tr>
             <td>#${item.number}</td>
-            <td>${item.title.substring(0, 50)}...</td>
-            <td>${item.author}</td>
-            <td>${item.labels.join(', ') || 'none'}</td>
+            <td>${escapeHtml(item.title)}</td>
+            <td>${escapeHtml(item.author)}</td>
             <td><span class="status-badge status-${item.state}">${item.state}</span></td>
+            <td>${formatDate(item.updated_at)}</td>
         </tr>
     `).join('') : `
         <tr>
-            <td colspan="5">No issues or pull requests found.</td>
+            <td colspan="5">No pull requests found.</td>
         </tr>
     `;
 }

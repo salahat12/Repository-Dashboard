@@ -9,55 +9,52 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-info">
-                <h1>Repository Dashboard</h1>
-                <p id="repo-description">Kronos is a GitHub repository tracking system</p>
+                <h1 id="repo-title">Repository Dashboard</h1>
+                <p id="repo-description">Loading repository details...</p>
+                <p id="repo-meta"></p>
             </div>
-            <a href="https://github.com/shiyu-coder/Kronos" target="_blank" class="repo-link">shiyu-coder/Kronos</a>
+            <a id="repo-link" href="#" target="_blank" class="repo-link">Open repository</a>
         </div>
 
-        <!-- Controls -->
         <div class="controls">
             <button class="btn-refresh" onclick="fetchData()">Refresh Data</button>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid" id="stats-grid" style="display: none;">
             <div class="stat-card">
-                <h3>Total Issues</h3>
-                <div class="value" id="total-issues">0</div>
-                <div class="description">Issues in repository</div>
+                <h3>Total Pull Requests</h3>
+                <div class="value" id="total-prs">0</div>
+                <div class="description">Pull requests in repository</div>
             </div>
             <div class="stat-card">
-                <h3>Open Issues</h3>
-                <div class="value" id="open-issues">0</div>
+                <h3>Open Pull Requests</h3>
+                <div class="value" id="open-prs">0</div>
                 <div class="description">Currently open</div>
             </div>
             <div class="stat-card">
-                <h3>Pull Requests</h3>
-                <div class="value" id="total-prs">0</div>
-                <div class="description">Pull requests</div>
+                <h3>Closed Pull Requests</h3>
+                <div class="value" id="closed-prs">0</div>
+                <div class="description">Already closed</div>
             </div>
             <div class="stat-card">
-                <h3>Repository Activity</h3>
-                <div class="value" id="activity-count">0</div>
-                <div class="description" id="activity-description">Recent updates</div>
+                <h3>Latest Update</h3>
+                <div class="value" id="latest-update">-</div>
+                <div class="description">Most recent pull request update</div>
             </div>
         </div>
 
-        <!-- Charts -->
         <div class="charts-grid" id="charts-grid" style="display: none;">
             <div class="chart-card">
-                <h3>Repository Activity</h3>
-                <p>Recent issues and pull requests</p>
+                <h3>Pull Request Activity</h3>
+                <p>Recent pull requests by creation month</p>
                 <div class="chart-container">
                     <canvas id="activityChart"></canvas>
                 </div>
             </div>
             <div class="chart-card">
-                <h3>Issues vs Pull Requests</h3>
+                <h3>Open vs Closed Pull Requests</h3>
                 <p>Repository work breakdown</p>
                 <div class="chart-container">
                     <canvas id="breakdownChart"></canvas>
@@ -65,18 +62,17 @@
             </div>
         </div>
 
-        <!-- Table -->
         <div class="table-card" id="table-card" style="display: none;">
-            <h3>Recent Issues & Pull Requests</h3>
-            <p>Latest items from repository</p>
+            <h3>Recent Pull Requests</h3>
+            <p>Latest pull requests from repository</p>
             <table>
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Title</th>
                         <th>Author</th>
-                        <th>Labels</th>
                         <th>Status</th>
+                        <th>Updated</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -84,12 +80,10 @@
             </table>
         </div>
 
-        <!-- Error Message -->
         <div id="error-message" style="display: none;"></div>
 
-        <!-- Loading Message -->
         <div id="loading-message" style="display: none;">
-            <div class="loading-text">Loading data from GitHub...</div>
+            <div class="loading-text">Loading repository data...</div>
         </div>
     </div>
 
