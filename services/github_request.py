@@ -40,7 +40,7 @@ async def fetch_repo_info() -> Repository:
     )
 
 
-async def _fetch_recent_pull_requests(client: httpx.AsyncClient, repo_id: int) -> list[Pull_Request]:
+async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[Pull_Request]:
     url = f"{GITHUB_API_URL}/repos/{REPO_OWNER}/{REPO_NAME}/pulls"
 
     params = {
@@ -60,7 +60,7 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient, repo_id: int) -
         pull_requests.append(
             Pull_Request(
                 pr_id=item["id"],
-                repo_id=repo_id,
+                branch_id=None,
                 number=item["number"],
                 title=item["title"],
                 description=item.get("body"),
@@ -76,7 +76,6 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient, repo_id: int) -
 
 async def fetch_pull_requests() -> list[Pull_Request]:
     async with httpx.AsyncClient() as client:
-        repo = await _fetch_repo_data(client)
-        recent_pull_requests = await _fetch_recent_pull_requests(client, repo["id"])
+        recent_pull_requests = await _fetch_recent_pull_requests(client)
 
     return recent_pull_requests
