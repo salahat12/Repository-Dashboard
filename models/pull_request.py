@@ -4,12 +4,13 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class Repository(BaseModel):
+class Pull_Request(BaseModel):
+    pr_id: int
     repo_id: int
-    github_id: int
-    name: str
-    owner: str
+    number: int
+    title: str
     description: Optional[str] = None
-    url: str
+    state: str
+    author: str
     created_at: datetime
     updated_at: datetime
