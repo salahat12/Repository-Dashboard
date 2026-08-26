@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class Pull_Request(BaseModel):
     pr_id: int
-    branch_id: Optional[int] = None
+    branch_name: str
     number: int
     title: str
     description: Optional[str] = None

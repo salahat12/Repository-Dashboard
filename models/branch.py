@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class Branch(BaseModel):
-    branch_id: int
-    repo_id: int
     name: str
+    repo_id: int
     is_default: bool
