@@ -8,6 +8,7 @@ CREATE TABLE repository (
     url VARCHAR(500)
 );
 
+
 -- 2. CONTRIBUTOR
 CREATE TABLE contributor (
     contributor_id SERIAL PRIMARY KEY,
@@ -22,11 +23,11 @@ CREATE TABLE contributor (
         ON DELETE CASCADE
 );
 
+
 -- 3. BRANCH
 CREATE TABLE branch (
-    branch_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) PRIMARY KEY,
     repo_id INTEGER NOT NULL,
-    name VARCHAR(255) NOT NULL,
     is_default BOOLEAN DEFAULT FALSE,
 
     CONSTRAINT fk_branch_repository
@@ -35,26 +36,27 @@ CREATE TABLE branch (
         ON DELETE CASCADE
 );
 
+
 -- 4. PULL REQUEST
 CREATE TABLE pull_request (
     pr_id SERIAL PRIMARY KEY,
-    branch_id INTEGER NOT NULL,
+    branch_name VARCHAR(255) NOT NULL,
     number INTEGER NOT NULL,
     title VARCHAR(255) NOT NULL,
     state VARCHAR(50) NOT NULL,
     author VARCHAR(255),
 
     CONSTRAINT fk_pull_request_branch
-        FOREIGN KEY (branch_id)
-        REFERENCES branch(branch_id)
+        FOREIGN KEY (branch_name)
+        REFERENCES branch(name)
         ON DELETE CASCADE
 );
 
+
 -- 5. COMMIT
 CREATE TABLE commits (
-    commit_id SERIAL PRIMARY KEY,
+    commit_sha VARCHAR(255) PRIMARY KEY,
     pr_id INTEGER NOT NULL,
-    sha VARCHAR(255) NOT NULL,
     message TEXT,
     author VARCHAR(255),
 
