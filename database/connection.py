@@ -8,6 +8,6 @@ def get_connection():
         host="localhost",
         dbname="postgres",
         user="postgres",
-        password=os.getenv("PG_PASSWORD", "Sama@9875123"),
+        password=os.getenv("PG_PASSWORD"),
         port="5432",
     )
