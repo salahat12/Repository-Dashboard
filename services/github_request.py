@@ -60,7 +60,7 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[Pull_Re
         pull_requests.append(
             Pull_Request(
                 pr_id=item["id"],
-                branch_id=None,
+                branch_name=item["head"]["ref"],
                 number=item["number"],
                 title=item["title"],
                 description=item.get("body"),
