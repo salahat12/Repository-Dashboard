@@ -1,4 +1,3 @@
--- 1. REPOSITORY
 CREATE TABLE repository (
     repo_id SERIAL PRIMARY KEY,
     github_id BIGINT NOT NULL,
@@ -8,8 +7,6 @@ CREATE TABLE repository (
     url VARCHAR(500)
 );
 
-
--- 2. CONTRIBUTOR
 CREATE TABLE contributor (
     contributor_id SERIAL PRIMARY KEY,
     repo_id INTEGER NOT NULL,
@@ -23,8 +20,6 @@ CREATE TABLE contributor (
         ON DELETE CASCADE
 );
 
-
--- 3. BRANCH
 CREATE TABLE branch (
     name VARCHAR(255) PRIMARY KEY,
     repo_id INTEGER NOT NULL,
@@ -36,8 +31,6 @@ CREATE TABLE branch (
         ON DELETE CASCADE
 );
 
-
--- 4. PULL REQUEST
 CREATE TABLE pull_request (
     pr_id SERIAL PRIMARY KEY,
     branch_name VARCHAR(255) NOT NULL,
@@ -52,8 +45,6 @@ CREATE TABLE pull_request (
         ON DELETE CASCADE
 );
 
-
--- 5. COMMIT
 CREATE TABLE commits (
     commit_sha VARCHAR(255) PRIMARY KEY,
     pr_id INTEGER NOT NULL,
