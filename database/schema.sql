@@ -1,58 +1,63 @@
-CREATE TABLE repository (
+
+CREATE TABLE Repository (
     repo_id SERIAL PRIMARY KEY,
-    github_id BIGINT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    github_id BIGINT UNIQUE NOT NULL,
+    repo_name VARCHAR(255) NOT NULL,
     owner VARCHAR(255) NOT NULL,
     description TEXT,
-    url VARCHAR(500)
+    url TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL
 );
 
-CREATE TABLE contributor (
+
+CREATE TABLE Contributor (
     contributor_id SERIAL PRIMARY KEY,
-    repo_id INTEGER NOT NULL,
+    repo_id INT NOT NULL,
     github_id BIGINT NOT NULL,
     username VARCHAR(255) NOT NULL,
-    permission VARCHAR(100),
-
-    CONSTRAINT fk_contributor_repository
-        FOREIGN KEY (repo_id)
-        REFERENCES repository(repo_id)
-        ON DELETE CASCADE
+    permission VARCHAR(50),
+    CONSTRAINT fk_contributor_repository 
+        FOREIGN KEY (repo_id) 
+        REFERENCES Repository(repo_id)
 );
 
-CREATE TABLE branch (
-    name VARCHAR(255) PRIMARY KEY,
-    repo_id INTEGER NOT NULL,
-    is_default BOOLEAN DEFAULT FALSE,
 
-    CONSTRAINT fk_branch_repository
-        FOREIGN KEY (repo_id)
-        REFERENCES repository(repo_id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE pull_request (
-    pr_id SERIAL PRIMARY KEY,
+CREATE TABLE Branch (
+    branch_id SERIAL PRIMARY KEY,
+    repo_id INT NOT NULL,
     branch_name VARCHAR(255) NOT NULL,
-    number INTEGER NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    state VARCHAR(50) NOT NULL,
-    author VARCHAR(255),
-
-    CONSTRAINT fk_pull_request_branch
-        FOREIGN KEY (branch_name)
-        REFERENCES branch(name)
-        ON DELETE CASCADE
+    is_default BOOLEAN DEFAULT FALSE,
+    CONSTRAINT fk_branch_repository 
+        FOREIGN KEY (repo_id) 
+        REFERENCES Repository(repo_id)
 );
 
-CREATE TABLE commits (
-    commit_sha VARCHAR(255) PRIMARY KEY,
-    pr_id INTEGER NOT NULL,
+
+CREATE TABLE Pull_Request (
+    pr_id SERIAL PRIMARY KEY,
+    branch_id INT NOT NULL,
+    pr_number INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    state VARCHAR(50),
+    author VARCHAR(255),
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    CONSTRAINT fk_pr_branch 
+        FOREIGN KEY (branch_id) 
+        REFERENCES Branch(branch_id)
+);
+
+
+CREATE TABLE Commit (
+    commit_id SERIAL PRIMARY KEY,
+    pr_id INT NOT NULL,
+    commit_sha VARCHAR(40) UNIQUE NOT NULL,
     message TEXT,
     author VARCHAR(255),
-
-    CONSTRAINT fk_commit_pull_request
-        FOREIGN KEY (pr_id)
-        REFERENCES pull_request(pr_id)
-        ON DELETE CASCADE
+    committed_at TIMESTAMPTZ NOT NULL,
+    CONSTRAINT fk_commit_pr 
+        FOREIGN KEY (pr_id) 
+        REFERENCES Pull_Request(pr_id)
 );
