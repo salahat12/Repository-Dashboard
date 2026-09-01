@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class Branch(OrmBase):
     __tablename__ = "branch"
 
-    branch_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     repo_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("repository.repo_id"), nullable=False
     )

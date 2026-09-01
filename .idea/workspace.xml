@@ -5,20 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88404862-7bd1-4757-b546-4dace097cfd0" name="Changes" comment="refactor models based on new orm">
-      <change afterPath="$PROJECT_DIR$/.idea/Repository-Dashboard.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/repository_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/repository_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/repository_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_reader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/repository_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_writer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/branch.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/branch.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/commit.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/commit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contributor.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/contributor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/pull_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/pull_request.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/github_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/github_request.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -354,7 +347,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788254211992</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="refactor models based on new orm">
+      <option name="closed" value="true" />
+      <created>1788263303464</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1788263303464</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor models based on new orm">
+      <option name="closed" value="true" />
+      <created>1788263351057</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1788263351057</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

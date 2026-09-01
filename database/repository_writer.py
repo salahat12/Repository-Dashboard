@@ -54,7 +54,7 @@ class RepositoryWriter:
 
             branch_ids = [
                 row[0]
-                for row in session.query(Branch.branch_id)
+                for row in session.query(Branch.id)
                 .filter(
                     Branch.repo_id == repo_id
                 )
@@ -67,7 +67,7 @@ class RepositoryWriter:
                 # Find pull request IDs
                 pr_ids = [
                     row[0]
-                    for row in session.query(PullRequest.pr_id)
+                    for row in session.query(PullRequest.id)
                     .filter(
                         PullRequest.branch_id.in_(branch_ids)
                     )
@@ -141,7 +141,7 @@ class RepositoryWriter:
 
 
         pull_request_row = PullRequest(
-            branch_id=branch.branch_id,
+            branch_id=pull_request.branch_id,
             pr_number=pull_request.pr_number,
             title=pull_request.title,
             description=pull_request.description,

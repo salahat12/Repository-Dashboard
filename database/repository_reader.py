@@ -33,7 +33,7 @@ class RepositoryReader:
                 select(PullRequest)
                 .join(
                     Branch,
-                    Branch.branch_id == PullRequest.branch_id
+                    Branch.id == PullRequest.branch_id
                 )
                 .where(
                     Branch.repo_id == repo_id

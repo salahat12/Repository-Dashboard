@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class PullRequest(OrmBase):
     __tablename__ = "pull_request"
 
-    pr_id: Mapped[int] = mapped_column(
+    id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         autoincrement=True,
@@ -22,7 +22,7 @@ class PullRequest(OrmBase):
 
     branch_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("branch.branch_id"),
+        ForeignKey("branch.id"),
         nullable=False,
     )
 

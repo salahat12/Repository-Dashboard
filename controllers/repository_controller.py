@@ -73,7 +73,7 @@ async def get_github_pull_requests():
 
         return [
             {
-                "pr_id": pr.pr_id,
+                "pr_id": pr.id,
                 "pr_number": pr.pr_number,
                 "title": pr.title,
                 "description": pr.description,
