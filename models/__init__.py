@@ -1,13 +1,15 @@
-from models.branch import Branch
-from models.contributor import Contributor
-from models.commit import Commit
-from models.pull_request import Pull_Request
-from models.repository import Repository
+from .base import OrmBase
+from .branch import Branch
+from .commit import Commit
+from .contributor import Contributor
+from .pull_request import PullRequest
+from .repository import Repository
 
 __all__ = [
+    "OrmBase",
     "Repository",
-    "Branch",
     "Contributor",
+    "Branch",
+    "PullRequest",
     "Commit",
-    "Pull_Request",
 ]
