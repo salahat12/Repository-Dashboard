@@ -1,7 +1,6 @@
 
 CREATE TABLE Repository (
     repo_id SERIAL PRIMARY KEY,
-    github_id BIGINT UNIQUE NOT NULL,
     repo_name VARCHAR(255) NOT NULL,
     owner VARCHAR(255) NOT NULL,
     description TEXT,
@@ -14,7 +13,6 @@ CREATE TABLE Repository (
 CREATE TABLE Contributor (
     contributor_id SERIAL PRIMARY KEY,
     repo_id INT NOT NULL,
-    github_id BIGINT NOT NULL,
     username VARCHAR(255) NOT NULL,
     permission VARCHAR(50),
     CONSTRAINT fk_contributor_repository 

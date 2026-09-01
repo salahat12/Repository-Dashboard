@@ -13,12 +13,7 @@ class Repository(Base):
         autoincrement=True
     )
 
-    github_id: Mapped[int] = mapped_column(
-        BigInteger,
-        nullable=False
-    )
-
-    name: Mapped[str] = mapped_column(
+    repo_name: Mapped[str] = mapped_column(
         String(255),
         nullable=False
     )

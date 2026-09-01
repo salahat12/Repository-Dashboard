@@ -18,11 +18,6 @@ class Contributor(Base):
         nullable=False
     )
 
-    github_id: Mapped[int] = mapped_column(
-        BigInteger,
-        nullable=False
-    )
-
     username: Mapped[str] = mapped_column(
         String(255),
         nullable=False

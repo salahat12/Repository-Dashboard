@@ -18,7 +18,7 @@ class Commit(Base):
         nullable=False
     )
 
-    sha: Mapped[str] = mapped_column(
+    commit_sha: Mapped[str] = mapped_column(
         String(40),
         nullable=False
     )
