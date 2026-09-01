@@ -1,7 +1,7 @@
 import httpx
-
+from models import Branch, PullRequest, Repository
 from config import GITHUB_API_URL, GITHUB_TOKEN, REPO_NAME, REPO_OWNER
-from models import PullRequest, Repository
+from models import Branch, PullRequest, Repository
 
 
 def _headers():
@@ -29,9 +29,7 @@ async def fetch_repo_info() -> Repository:
         repo = await _fetch_repo_data(client)
 
     return Repository(
-        repo_id=repo["id"],
-        github_id=repo["id"],
-        name=repo["name"],
+        repo_name=repo["name"],
         owner=repo["owner"]["login"],
         description=repo.get("description"),
         url=repo["html_url"],
@@ -59,9 +57,8 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[PullReq
     for item in data:
         pull_requests.append(
             PullRequest(
-                pr_id=item["id"],
-                branch_name=item["head"]["ref"],
-                number=item["number"],
+                branch=Branch(branch_name=item["head"]["ref"]),
+                pr_number=item["number"],
                 title=item["title"],
                 description=item.get("body"),
                 author=item["user"]["login"],

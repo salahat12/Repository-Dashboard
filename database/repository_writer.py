@@ -1,89 +1,154 @@
-from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy import select
 
 from database.engine import session_scope
-from models import Branch, PullRequest, Repository
+from models import Branch, Commit, PullRequest, Repository
 
 
 class RepositoryWriter:
-    """All write paths for repository data. Kept separate from RepositoryReader
-    so callers that only ever read never import/instantiate a writer."""
 
-    def upsert_repository(self, repo: Repository) -> None:
-        values = {
-            "repo_id": repo.repo_id,
-            "github_id": repo.github_id,
-            "name": repo.name,
-            "owner": repo.owner,
-            "description": repo.description,
-            "url": repo.url,
-            "created_at": repo.created_at,
-            "updated_at": repo.updated_at,
-        }
-        stmt = pg_insert(Repository).values(**values)
-        stmt = stmt.on_conflict_do_update(
-            index_elements=[Repository.repo_id],
-            set_={key: value for key, value in values.items() if key != "repo_id"},
-        )
-        with session_scope() as session:
-            session.execute(stmt)
+    def upsert_repository(self, repo: Repository) -> int:
 
-    def replace_pull_requests(self, repo_id: int, pull_requests: list[PullRequest]) -> None:
-        """Mirrors the original delete-then-reinsert semantics: every branch
-        belonging to repo_id is dropped (cascading to its pull requests and
-        commits via ON DELETE CASCADE) and rebuilt from the given list."""
+
         with session_scope() as session:
-            session.query(Branch).filter(Branch.repo_id == repo_id).delete(
-                synchronize_session=False
+
+            existing = session.execute(
+                select(Repository)
+                .where(
+                    Repository.repo_name == repo.repo_name,
+                    Repository.owner == repo.owner,
+                )
+            ).scalar_one_or_none()
+
+            if existing is not None:
+
+                existing.description = repo.description
+                existing.url = repo.url
+                existing.updated_at = repo.updated_at
+
+                session.flush()
+
+                return existing.repo_id
+
+            repository = Repository(
+                repo_name=repo.repo_name,
+                owner=repo.owner,
+                description=repo.description,
+                url=repo.url,
+                created_at=repo.created_at,
+                updated_at=repo.updated_at,
             )
 
-            if len(pull_requests) > 1000:
-                self._upsert_pull_requests_loop(session, repo_id, pull_requests)
-            else:
-                self._upsert_pull_requests_recursive(session, repo_id, pull_requests)
+            session.add(repository)
+            session.flush()
 
-    def _upsert_pull_requests_loop(
-            self, session, repo_id: int, pull_requests: list[PullRequest]
+            return repository.repo_id
+
+    def replace_pull_requests(
+        self,
+        repo_id: int,
+        pull_requests: list[PullRequest],
     ) -> None:
-        for pull_request in pull_requests:
-            self._upsert_one_pull_request(session, repo_id, pull_request)
 
-    def _upsert_pull_requests_recursive(
-            self, session, repo_id: int, pull_requests: list[PullRequest]
+        with session_scope() as session:
+
+
+            branch_ids = [
+                row[0]
+                for row in session.query(Branch.branch_id)
+                .filter(
+                    Branch.repo_id == repo_id
+                )
+                .all()
+            ]
+
+
+            if branch_ids:
+
+                # Find pull request IDs
+                pr_ids = [
+                    row[0]
+                    for row in session.query(PullRequest.pr_id)
+                    .filter(
+                        PullRequest.branch_id.in_(branch_ids)
+                    )
+                    .all()
+                ]
+
+                # Delete commits first
+                if pr_ids:
+                    session.query(Commit).filter(
+                        Commit.pr_id.in_(pr_ids)
+                    ).delete(
+                        synchronize_session=False
+                    )
+
+                # Delete pull requests
+                session.query(PullRequest).filter(
+                    PullRequest.branch_id.in_(branch_ids)
+                ).delete(
+                    synchronize_session=False
+                )
+
+                # Delete branches
+                session.query(Branch).filter(
+                    Branch.repo_id == repo_id
+                ).delete(
+                    synchronize_session=False
+                )
+
+
+
+            for pull_request in pull_requests:
+
+                self._insert_one_pull_request(
+                    session,
+                    repo_id,
+                    pull_request,
+                )
+
+    def _insert_one_pull_request(
+        self,
+        session,
+        repo_id: int,
+        pull_request: PullRequest,
     ) -> None:
-        # Base case: nothing left to insert.
-        if not pull_requests:
-            return
 
-        pull_request, *remaining = pull_requests
-        self._upsert_one_pull_request(session, repo_id, pull_request)
 
-        # Recurse on the rest of the list.
-        self._upsert_pull_requests_recursive(session, repo_id, remaining)
+        branch_name = pull_request.branch.branch_name
 
-    def _upsert_one_pull_request(self, session, repo_id: int, pull_request: PullRequest) -> None:
-        branch_stmt = pg_insert(Branch).values(
-            name=pull_request.branch_name, repo_id=repo_id, is_default=False
+
+
+        branch = session.execute(
+            select(Branch)
+            .where(
+                Branch.repo_id == repo_id,
+                Branch.branch_name == branch_name,
+            )
+        ).scalar_one_or_none()
+
+
+
+        if branch is None:
+
+            branch = Branch(
+                repo_id=repo_id,
+                branch_name=branch_name,
+                is_default=False,
+            )
+
+            session.add(branch)
+            session.flush()
+
+
+        pull_request_row = PullRequest(
+            branch_id=branch.branch_id,
+            pr_number=pull_request.pr_number,
+            title=pull_request.title,
+            description=pull_request.description,
+            state=pull_request.state,
+            author=pull_request.author,
+            created_at=pull_request.created_at,
+            updated_at=pull_request.updated_at,
         )
-        branch_stmt = branch_stmt.on_conflict_do_update(
-            index_elements=[Branch.name],
-            set_={"repo_id": repo_id, "is_default": False},
-        )
-        session.execute(branch_stmt)
 
-        pr_values = {
-            "pr_id": pull_request.pr_id,
-            "branch_name": pull_request.branch_name,
-            "number": pull_request.number,
-            "title": pull_request.title,
-            "description": pull_request.description,
-            "state": pull_request.state,
-            "author": pull_request.author,
-            "created_at": pull_request.created_at,
-            "updated_at": pull_request.updated_at,
-        }
-        pr_stmt = pg_insert(PullRequest).values(**pr_values)
-        pr_stmt = pr_stmt.on_conflict_do_update(
-            index_elements=[PullRequest.pr_id],
-            set_={key: value for key, value in pr_values.items() if key != "pr_id"},
-        )
-        session.execute(pr_stmt)
+        session.add(pull_request_row)
