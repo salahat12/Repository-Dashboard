@@ -1,9 +1,37 @@
-from pydantic import BaseModel
+from datetime import datetime
 
+from sqlalchemy import BigInteger, Boolean, ForeignKey, String, Text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-class Contributor(BaseModel):
-    contributor_id: int
-    repo_id: int
-    github_id: int
-    username: str
-    permission: str
+class Contributor(Base):
+    __tablename__ = "contributor"
+
+    contributor_id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    repo_id: Mapped[int] = mapped_column(
+        ForeignKey("repository.repo_id"),
+        nullable=False
+    )
+
+    github_id: Mapped[int] = mapped_column(
+        BigInteger,
+        nullable=False
+    )
+
+    username: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+
+    permission: Mapped[str | None] = mapped_column(
+        String(50)
+    )
+
+    # Relationship
+    repository: Mapped["Repository"] = relationship(
+        back_populates="contributors"
+    )
+
