@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from models import Pull_Request, Repository
+from models import PullRequest, Repository
 from services.github_request import fetch_pull_requests, fetch_repo_info
 
 router = APIRouter()
@@ -18,7 +18,7 @@ async def get_github_repo():
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
-@router.get("/github/pull-requests", response_model=list[Pull_Request])
+@router.get("/github/pull-requests", response_model=list[PullRequest])
 async def get_github_pull_requests():
     try:
         return await fetch_pull_requests()

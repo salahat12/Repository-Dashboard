@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from sqlalchemy import BigInteger, Boolean, ForeignKey, String, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from models.base import Base
+
+
 class Branch(Base):
     __tablename__ = "branch"
 

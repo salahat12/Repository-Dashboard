@@ -1,7 +1,7 @@
 import httpx
 
 from config import GITHUB_API_URL, GITHUB_TOKEN, REPO_NAME, REPO_OWNER
-from models import Pull_Request, Repository
+from models import PullRequest, Repository
 
 
 def _headers():
@@ -29,7 +29,6 @@ async def fetch_repo_info() -> Repository:
         repo = await _fetch_repo_data(client)
 
     return Repository(
-        repo_id=repo["id"],
         github_id=repo["id"],
         name=repo["name"],
         owner=repo["owner"]["login"],
@@ -40,7 +39,7 @@ async def fetch_repo_info() -> Repository:
     )
 
 
-async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[Pull_Request]:
+async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[PullRequest]:
     url = f"{GITHUB_API_URL}/repos/{REPO_OWNER}/{REPO_NAME}/pulls"
 
     params = {
@@ -58,10 +57,9 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[Pull_Re
 
     for item in data:
         pull_requests.append(
-            Pull_Request(
-                pr_id=item["id"],
+            PullRequest(
+                pr_number=item["number"],
                 branch_id=None,
-                number=item["number"],
                 title=item["title"],
                 description=item.get("body"),
                 author=item["user"]["login"],
@@ -74,7 +72,7 @@ async def _fetch_recent_pull_requests(client: httpx.AsyncClient) -> list[Pull_Re
     return pull_requests
 
 
-async def fetch_pull_requests() -> list[Pull_Request]:
+async def fetch_pull_requests() -> list[PullRequest]:
     async with httpx.AsyncClient() as client:
         recent_pull_requests = await _fetch_recent_pull_requests(client)
 
