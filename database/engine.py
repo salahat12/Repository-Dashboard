@@ -51,13 +51,7 @@ load_dotenv()
 # Import all models so SQLAlchemy registers their tables.
 # If a model is not imported here, its table will not be created by
 # ``ensure_schema()`` and will be missing from the database.
-from models import (
-    Repository,
-    Contributor,
-    Branch,
-    PullRequest,
-    Commit,
-)
+
 
 # Database connection URL.
 # Format: postgresql+psycopg2://user:password@host:port/database
