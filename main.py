@@ -32,7 +32,7 @@ Key files behind each layer:
   - Database writes     : database/repository_writer.py
   - Database reads      : database/repository_reader.py
   - ORM models          : models/__init__.py  (Repository, Branch, PullRequest,
-                                Commit, Contributor, Push)
+                                Commit, Contributor)
   - DB connection       : database/engine.py  (SQLAlchemy engine, session factory,
                                 ensure_schema() to auto-create tables)
   - HTML template       : templates/index.html

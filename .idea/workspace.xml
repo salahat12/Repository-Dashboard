@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88404862-7bd1-4757-b546-4dace097cfd0" name="Changes" comment="refactor models based on new orm">
-      <change afterPath="$PROJECT_DIR$/models/branch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/commit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/contributor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/pull_request.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/repository_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/repository_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/engine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/repository_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_reader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/repository_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_writer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/github_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/github_request.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +210,7 @@
       <option name="presentableId" value="Default" />
       <updated>1786958192225</updated>
       <workItem from="1788327179312" duration="1892000" />
-      <workItem from="1788329471174" duration="1945000" />
+      <workItem from="1788329471174" duration="2850000" />
     </task>
     <task id="LOCAL-00001" summary="code fix and organize">
       <option name="closed" value="true" />
@@ -433,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788263351057</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="refactor models based on new orm">
+      <option name="closed" value="true" />
+      <created>1788331574646</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1788331574646</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
