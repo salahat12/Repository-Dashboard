@@ -5,13 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88404862-7bd1-4757-b546-4dace097cfd0" name="Changes" comment="refactor models based on new orm">
+      <change afterPath="$PROJECT_DIR$/models/branch.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/commit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/contributor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/pull_request.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/repository_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/repository_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/engine.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/repository_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_reader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/repository_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/repository_writer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/branch.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/branch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/commit.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/commit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/pull_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/pull_request.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/github_request.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/github_request.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +33,7 @@
     </colors>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="25" />
+    <option name="cachedIndexableFilesCount" value="37" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -65,13 +73,72 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:salahat12/Repository-Dashboard.git&quot;,
-    &quot;accountId&quot;: &quot;a6c97295-7225-41dc-90ae-27cdb9f4f644&quot;
+    &quot;url&quot;: &quot;https://github.com/salahat12/Repository-Dashboard.git&quot;,
+    &quot;accountId&quot;: &quot;3f1f4fdf-dbdc-4bd3-aa69-ebf2c2f98ac3&quot;
   }
 }</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.4665164957684036" />
+      <entry key="MS500" value="1.8585654364377537" />
+      <entry key="S2" value="1.9625944431017524" />
+      <entry key="S5" value="1.98486822219045" />
+      <entry key="S10" value="1.9948081227778052" />
+      <entry key="S30" value="2.328366905611035" />
+      <entry key="S60" value="3.2490241827893147" />
+      <entry key="M2" value="4.987736836893963" />
+      <entry key="M5" value="8.610975110548367" />
+      <entry key="M10" value="11.369928864345116" />
+      <entry key="M15" value="12.64678152147355" />
+      <entry key="M30" value="14.171073792432406" />
+      <entry key="H1" value="15.043351136833326" />
+      <entry key="H2" value="15.510562760045287" />
+      <entry key="H4" value="15.752428752741427" />
+      <entry key="D1" value="15.95833543331937" />
+      <entry key="W1" value="15.994037971297704" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.374384489682135" />
+      <entry key="MS500" value="1.8353289509401989" />
+      <entry key="S2" value="1.9564695238667769" />
+      <entry key="S5" value="1.9823912397147183" />
+      <entry key="S10" value="1.9935634955312493" />
+      <entry key="S30" value="2.327875330121151" />
+      <entry key="S60" value="3.2486663011928214" />
+      <entry key="M2" value="4.987410051424052" />
+      <entry key="M5" value="8.610545496664422" />
+      <entry key="M10" value="11.369515824922212" />
+      <entry key="M15" value="12.646430786111234" />
+      <entry key="M30" value="14.170848210846277" />
+      <entry key="H1" value="15.043222792790363" />
+      <entry key="H2" value="15.510494254941" />
+      <entry key="H4" value="15.752393356312048" />
+      <entry key="D1" value="15.958329369648002" />
+      <entry key="W1" value="15.994037100963993" />
+    </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2,
@@ -105,6 +172,7 @@
     "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
     "to.speed.mode.migration.done": "true"
   },
   "keyToStringList": {
@@ -143,7 +211,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-024ed6589d45-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.23567.174" />
+        <option value="bundled-python-sdk-6fa658e1df1a-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.8665.369" />
       </set>
     </attachedChunks>
   </component>
@@ -154,6 +222,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1786958192225</updated>
+      <workItem from="1788327179312" duration="1892000" />
+      <workItem from="1788329471174" duration="1945000" />
     </task>
     <task id="LOCAL-00001" summary="code fix and organize">
       <option name="closed" value="true" />
@@ -394,6 +464,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="refactor models based on new orm" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Repository_Dashboard$main.coverage" NAME="main Coverage Results" MODIFIED="1788157299263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Repository_Dashboard$main.coverage" NAME="main Coverage Results" MODIFIED="1788331412456" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

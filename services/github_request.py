@@ -1,5 +1,5 @@
 """
-GitHub API service — fetches repository metadata and recent pull requests
+GitHub API service — fetches repository.py metadata and recent pull requests
 from the GitHub REST API and returns them as SQLAlchemy ORM objects.
 
 This module is the data-fetching layer.  It knows nothing about the
@@ -50,7 +50,7 @@ def _headers() -> dict:
 
 
 async def _fetch_repo_data(client: httpx.AsyncClient) -> dict:
-    """Fetch raw JSON for the repository from the GitHub API."""
+    """Fetch raw JSON for the repository.py from the GitHub API."""
     url = f"{GITHUB_API_URL}/repos/{REPO_OWNER}/{REPO_NAME}"
     response = await client.get(url, headers=_headers())
     response.raise_for_status()
@@ -58,7 +58,7 @@ async def _fetch_repo_data(client: httpx.AsyncClient) -> dict:
 
 
 async def fetch_repo_info() -> Repository:
-    """Fetch repository metadata from GitHub and return a ``Repository`` ORM
+    """Fetch repository.py metadata from GitHub and return a ``Repository`` ORM
     object.
 
     Calls ``GET /repos/{owner}/{repo}`` and maps the response fields

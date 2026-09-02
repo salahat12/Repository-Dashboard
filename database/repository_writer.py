@@ -1,18 +1,19 @@
 """
-RepositoryWriter — writes repository, branch, and pull-request data
+RepositoryWriter — writes repository.py, branch, and pull-request data
 into the PostgreSQL database via SQLAlchemy ORM.
 
-Every model follows the same FK convention: each entity has a single
-``id`` column that points to the parent entity's ``pk`` primary key.
-The root entity (``Repository``) has no parent, so its ``id`` is NULL.
+Every model follows the same FK convention: each entity has a
+``<parent_table>_id`` column that points to the parent entity's ``id``
+primary key. The root entity (``Repository``) has no parent, so it has
+no such column.
 
-Table relationships (all via ``id`` → parent.pk):
+Table relationships (all via ``<parent>_id`` → parent.id):
 
-    Repository.pk  (root, no parent)
-      └─ Branch.id  → Repository.pk        (one repo has many branches)
-           └─ PullRequest.id  → Branch.pk  (one branch has many PRs)
-                └─ Commit.id  → PullRequest.pk  (one PR has many commits)
-      └─ Contributor.id  → Repository.pk  (one repo has many contributors)
+    Repository.id  (root, no parent)
+      └─ Branch.repository_id  → Repository.id        (one repo has many branches)
+           └─ PullRequest.branch_id  → Branch.id       (one branch has many PRs)
+                └─ Commit.pull_request_id  → PullRequest.id  (one PR has many commits)
+      └─ Contributor.repository_id  → Repository.id    (one repo has many contributors)
 
 Flow for a typical /github/pull-requests request:
 
@@ -20,10 +21,10 @@ Flow for a typical /github/pull-requests request:
        a list of PullRequest ORM objects (each with an embedded Branch).
 
     2. RepositoryWriter.upsert_repository() inserts or updates the
-       Repository row and returns its internal pk.
+       Repository row and returns its internal id.
 
     3. RepositoryWriter.replace_pull_requests() atomically replaces all
-       branches + PRs + commits for that repository:
+       branches + PRs + commits for that repository.py:
        - Delete existing commits, PRs, branches (inside one transaction)
        - Insert the new batch one by one via _insert_one_pull_request()
 
@@ -38,10 +39,10 @@ from models import Branch, Commit, PullRequest, Repository
 
 
 class RepositoryWriter:
-    """Write repository and pull-request data into the PostgreSQL database.
+    """Write repository.py and pull-request data into the PostgreSQL database.
 
     Uses the ORM models from ``models`` where every foreign key is named
-    ``id`` and points to the parent entity's ``pk`` column.
+    ``<parent_table>_id`` and points to the parent entity's ``id`` column.
     """
 
     # ------------------------------------------------------------------
@@ -51,7 +52,7 @@ class RepositoryWriter:
     def upsert_repository(self, repo: Repository) -> int:
         """Insert *repo* or update its description/URL/timestamp if it exists.
 
-        Returns the internal auto-increment ``pk`` of the ``Repository`` row.
+        Returns the internal auto-increment ``id`` of the ``Repository`` row.
         """
         with session_scope() as session:
             # Look for an existing row with the same repo_name + owner.
@@ -69,7 +70,7 @@ class RepositoryWriter:
                 existing.url = repo.url
                 existing.updated_at = repo.updated_at
                 session.flush()
-                return existing.pk
+                return existing.id
 
             # No existing row — insert a fresh one.
             repository = Repository(
@@ -82,7 +83,7 @@ class RepositoryWriter:
             )
             session.add(repository)
             session.flush()
-            return repository.pk
+            return repository.id
 
     def replace_pull_requests(
         self,
@@ -100,7 +101,7 @@ class RepositoryWriter:
             branch_ids = [
                 row[0]
                 for row in session.execute(
-                    select(Branch.pk).where(Branch.id == repo_id)
+                    select(Branch.id).where(Branch.repository_id == repo_id)
                 ).all()
             ]
 
@@ -109,8 +110,8 @@ class RepositoryWriter:
                 pr_ids = [
                     row[0]
                     for row in session.execute(
-                        select(PullRequest.pk).where(
-                            PullRequest.id.in_(branch_ids)
+                        select(PullRequest.id).where(
+                            PullRequest.branch_id.in_(branch_ids)
                         )
                     ).all()
                 ]
@@ -118,19 +119,19 @@ class RepositoryWriter:
                 # Delete commits first (they reference pull requests).
                 if pr_ids:
                     session.execute(
-                        delete(Commit).where(Commit.id.in_(pr_ids))
+                        delete(Commit).where(Commit.pull_request_id.in_(pr_ids))
                     )
 
                 # Delete pull requests.
                 session.execute(
                     delete(PullRequest).where(
-                        PullRequest.id.in_(branch_ids)
+                        PullRequest.branch_id.in_(branch_ids)
                     )
                 )
 
                 # Delete branches.
                 session.execute(
-                    delete(Branch).where(Branch.id == repo_id)
+                    delete(Branch).where(Branch.repository_id == repo_id)
                 )
 
             # --- Insert the fresh batch ---
@@ -153,14 +154,14 @@ class RepositoryWriter:
         # Look up or create the branch row.
         branch = session.execute(
             select(Branch).where(
-                Branch.id == repo_id,
+                Branch.repository_id == repo_id,
                 Branch.branch_name == branch_name,
             )
         ).scalar_one_or_none()
 
         if branch is None:
             branch = Branch(
-                id=repo_id,
+                repository_id=repo_id,
                 branch_name=branch_name,
                 is_default=False,
             )
@@ -168,7 +169,7 @@ class RepositoryWriter:
             session.flush()
 
         pull_request_row = PullRequest(
-            id=branch.pk,
+            branch_id=branch.id,
             pr_number=pull_request.pr_number,
             title=pull_request.title,
             description=pull_request.description,

@@ -22,14 +22,14 @@ async def get_github_repo():
     try:
         repo = await fetch_repo_info()
 
-        # Save the repository and get its database ID
+        # Save the repository.py and get its database ID
         repo_id = writer.upsert_repository(repo)
 
-        # Load the repository from the database
+        # Load the repository.py from the database
         repository = reader.load_repository(repo_id)
 
         return {
-            "repo_id": repository.pk,
+            "repo_id": repository.id,
             "repo_name": repository.repo_name,
             "owner": repository.owner,
             "description": repository.description,
@@ -59,7 +59,7 @@ async def get_github_pull_requests():
         repo = await fetch_repo_info()
         pull_requests = await fetch_pull_requests()
 
-        # Save the repository and get its database ID
+        # Save the repository.py and get its database ID
         repo_id = writer.upsert_repository(repo)
 
         # Save the pull requests

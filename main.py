@@ -58,9 +58,9 @@ app = FastAPI()
 # Visiting /static/script.js serves static/script.js from disk.
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Register all API routes from the repository controller.
+# Register all API routes from the repository.py controller.
 # This adds the following endpoints to the app:
-#   GET /github              → repository info (fetched from GitHub + DB)
+#   GET /github              → repository.py info (fetched from GitHub + DB)
 #   GET /github/pull-requests → list of pull requests
 #   GET /dashboard           → HTML dashboard page
 app.include_router(repository_router)

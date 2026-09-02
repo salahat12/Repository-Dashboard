@@ -2,7 +2,7 @@
 Configuration for the Repository Dashboard.
 
 This module centralizes everything that the application needs to know at
-startup: the GitHub API endpoint, the target repository, and the secret
+startup: the GitHub API endpoint, the target repository.py, and the secret
 token used to authenticate GitHub requests.
 
 All values can be overridden from a ``.env`` file in the project root
@@ -26,7 +26,7 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 # Base URL for the GitHub REST API (v3).
 GITHUB_API_URL = "https://api.github.com"
 
-# The repository this dashboard monitors.
+# The repository.py this dashboard monitors.
 # Change these two values to point at a different repo.
 REPO_OWNER = "apache"
 REPO_NAME = "superset"

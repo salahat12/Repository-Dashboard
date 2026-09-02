@@ -74,7 +74,7 @@ async function fetchData() {
         document.getElementById('repo-meta').textContent =
             `Created ${formatDate(repoData.created_at)} • Updated ${formatDate(repoData.updated_at)}`;
         const repoLink = document.getElementById('repo-link');
-        repoLink.textContent = 'Open repository';
+        repoLink.textContent = 'Open repository.py';
         repoLink.href = repoData.url;
 
         const openPullRequests = pullRequests.filter(item => item.state === 'open').length;
