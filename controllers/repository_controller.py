@@ -29,7 +29,7 @@ async def get_github_repo():
         repository = reader.load_repository(repo_id)
 
         return {
-            "repo_id": repository.repo_id,
+            "repo_id": repository.pk,
             "repo_name": repository.repo_name,
             "owner": repository.owner,
             "description": repository.description,
